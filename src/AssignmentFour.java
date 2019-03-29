@@ -9,11 +9,15 @@ public class AssignmentFour
 
    public static void main(String[] args)
    {
-      System.out.println("Hello, AssignmentFour");
+      BarcodeImage image = new BarcodeImage();
+      image.displayToConsole();
    }
 
 }
 
+/*
+ * BarcodeIO interface...
+ */
 interface BarcodeIO
 {
    public boolean scan(BarcodeImage bc);
@@ -24,13 +28,65 @@ interface BarcodeIO
    public void displayImageToConsole();
 }
 
+/*
+ * BarcodeImage class..
+ */
 class BarcodeImage implements Cloneable
 {
    public static final int MAX_HEIGHT = 30;
    public static final int MAX_WIDTH = 65;
+   // imageData[height/row][width/column]
    private boolean[][] imageData;
+   
+   public BarcodeImage()
+   {
+      imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
+   }
+   
+   public BarcodeImage(String[] strData)
+   {
+      if (checkSize(strData)) {
+         // TODO: position strData in lower left of imageData
+      }
+   }
+   
+   public BarcodeImage clone()
+   {
+      try {
+         return (BarcodeImage)super.clone();
+      } catch (CloneNotSupportedException e) {
+         return this;
+      }
+   }
+   
+   public void displayToConsole()
+   {
+      for(int i = 0; i < imageData.length; i ++) {
+         for(int j = 0; j < imageData[i].length; j++) {
+            System.out.println("(" + i + "," + j + ") " + imageData[i][j]);
+         }
+      }
+   }
+   
+   public boolean getPixel(int row, int col)
+   {
+      return true;
+   }
+   
+   public boolean setPixel(int row, int col, boolean value)
+   {
+      return true;
+   }
+   
+   private boolean checkSize(String[] data)
+   {
+      return true;
+   }
 }
 
+/*
+ * DataMatrix class...
+ */
 class DataMatrix implements BarcodeIO
 {
    public static final char BLACK_CHAR = '*';
@@ -70,22 +126,3 @@ class DataMatrix implements BarcodeIO
       
    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
