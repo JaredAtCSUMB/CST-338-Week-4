@@ -9,8 +9,29 @@ public class AssignmentFour
 
    public static void main(String[] args)
    {
-      BarcodeImage image = new BarcodeImage();
-      image.displayToConsole();
+      // BarcodeImage image = new BarcodeImage();
+      // image.displayToConsole();
+      String[] sImageIn =
+         {
+            "                                               ",
+            "                                               ",
+            "                                               ",
+            "     * * * * * * * * * * * * * * * * * * * * * ",
+            "     *                                       * ",
+            "     ****** **** ****** ******* ** *** *****   ",
+            "     *     *    ****************************** ",
+            "     * **    * *        **  *    * * *   *     ",
+            "     *   *    *  *****    *   * *   *  **  *** ",
+            "     *  **     * *** **   **  *    **  ***  *  ",
+            "     ***  * **   **  *   ****    *  *  ** * ** ",
+            "     *****  ***  *  * *   ** ** **  *   * *    ",
+            "     ***************************************** ",  
+            "                                               ",
+            "                                               ",
+            "                                               "
+
+         };
+      BarcodeImage bc = new BarcodeImage(sImageIn);
    }
 
 }
@@ -45,8 +66,17 @@ class BarcodeImage implements Cloneable
    
    public BarcodeImage(String[] strData)
    {
+      // TODO: position image in lower left corner
+      // TODO: does this call get/set pixel?
       if (checkSize(strData)) {
-         // TODO: position strData in lower left of imageData
+         for(int i = 0; i < strData.length; i++) {
+            System.out.println("===============================");
+            System.out.println("Evaluating row " + i + ": " + strData[i]);
+            System.out.println("===============================");
+            for(int j = 0; j < strData[i].length(); j++) {
+               System.out.println("(" + i + ", " + j + ") " + strData[i].charAt(j));
+            }
+         }
       }
    }
    
