@@ -178,22 +178,28 @@ class BarcodeImage implements Cloneable
       if (!checkSize(strData)) {
          throw new IllegalArgumentException("Invalid image size.");
       }
-      //position image in lower left corner
-      //Start from the last element (row) and walk backwards.
-      
+
       int k = MAX_HEIGHT - 1;
+      String data;
+      char charData;
+      boolean fillData;
+
+      //position image in lower left corner
+      //Start from the last element (row) and walk backwards.  
       for(int i = strData.length - 1; i >= 0; i--) {
-         String data = strData[i];
+         data = strData[i];
          // we process each column
          for(int j = 0; j < data.length(); j++) {
-            char charData = data.charAt(j);
+            charData = data.charAt(j);
+            fillData = false;
             //check if this is space
-            boolean fillData = false;
             if (charData != ' ') {
                fillData = true;
             }
+            
             imageData[k][j] = fillData;
          }
+         
          k --;
       }
    }
@@ -236,10 +242,12 @@ class BarcodeImage implements Cloneable
    public boolean getPixel(int row, int col)
    {
       boolean ret = true;
+
       if (this.imageData == null || this.imageData.length == 0) {
          ret = false; 
       }
       ret = this.imageData[row][col];
+
       return ret;
    }
    
@@ -253,6 +261,7 @@ class BarcodeImage implements Cloneable
    public boolean setPixel(int row, int col, boolean value)
    {
       boolean ret = true;
+
       if (this.imageData == null || this.imageData.length == 0) {
          ret = false; 
       }
@@ -262,6 +271,7 @@ class BarcodeImage implements Cloneable
          //if there was any error trying to add to an array, return false.
          ret = false;
       }
+
       return ret;
    }
    
@@ -273,6 +283,7 @@ class BarcodeImage implements Cloneable
    private boolean checkSize(String[] data)
    {
       boolean validate = true;
+
       if (data == null || data.length == 0) {
          return false;
       }
@@ -287,6 +298,7 @@ class BarcodeImage implements Cloneable
       if (data.length > MAX_HEIGHT) {
          validate = false;
       }
+
       return validate;
    }
 }
@@ -352,6 +364,7 @@ class DataMatrix implements BarcodeIO
    public boolean scan(BarcodeImage bc)
    {
       boolean ret = true;
+
       try {
          //Create a clone image.
          this.image = bc.clone();
@@ -361,6 +374,7 @@ class DataMatrix implements BarcodeIO
       } catch (CloneNotSupportedException t) {
          ret = false;
       }
+
       return ret;
    }
    
@@ -396,6 +410,8 @@ class DataMatrix implements BarcodeIO
    /**
     * move the signal to the lower-left of the larger 2D array
     */
-   private void cleanImage() {
+   private void cleanImage()
+   {
+      
    }
 }
