@@ -315,7 +315,7 @@ class DataMatrix implements BarcodeIO
    private BarcodeImage image;
    
    // a single internal copy of any text read-in OR passed-into the constructor OR created by BarcodeIO's translateImageToText().
-   private String text = "";
+   private String text;
    
    //typically less than BarcodeImage.MAX_WIDTH and BarcodeImage.MAX_HEIGHT which represent the actual portion of the BarcodeImage that has the real signal.
    //This is dependent on the data in the image, and can change as the image changes through mutators.  It can be computed from the "spine" of the image.
@@ -327,7 +327,9 @@ class DataMatrix implements BarcodeIO
     * The initial image should be all white, however, actualWidth and actualHeight should start at 0, 
     * so it won't really matter what's in this default image, in practice.  The text can be set to blank, "", or something like "undefined".
     */
-   public DataMatrix() {
+   public DataMatrix()
+   {
+      readText("");
       this.image = new BarcodeImage();
    }
    
@@ -335,8 +337,8 @@ class DataMatrix implements BarcodeIO
     * Sets the image but leaves the text at its default value.  Call scan() and avoid duplication of code here.
     * @param image
     */
-   public DataMatrix(final BarcodeImage image) {
-      this.image = image;
+   public DataMatrix(BarcodeImage image)
+   {
       scan(image);
    }
    
@@ -344,9 +346,16 @@ class DataMatrix implements BarcodeIO
     * sets the text but leaves the image at its default value. Call readText() and avoid duplication of code here.
     * @param text
     */
-   public DataMatrix(String text) {
-      this.text = text;
+   public DataMatrix(String text)
+   {
       readText(text);
+   }
+   
+   public boolean readText(String text)
+   {
+      this.text = text;
+      //TODO: What do we need to check here size of text?
+      return true;
    }
    
    /**
@@ -371,6 +380,9 @@ class DataMatrix implements BarcodeIO
          
          //call cleanImage to correct the position.
          cleanImage();
+         
+         // set actualWidth
+         // set actualHeight
       } catch (CloneNotSupportedException t) {
          ret = false;
       }
@@ -378,11 +390,44 @@ class DataMatrix implements BarcodeIO
       return ret;
    }
    
-   public boolean readText(String text)
+   public int getActualWidth()
    {
-      this.text = text;
-      //TODO: What do we need to check here size of text?
-      return true;
+      return actualWidth;
+   }
+   
+   public int getActualHeight()
+   {
+      return actualWidth;
+   }
+   
+   /*
+    * Assuming that the image is correctly situated in the lower-left corner of
+    * the larger boolean array, these methods use the "spine" of the array
+    * (left and bottom BLACK) to determine the actual size.
+    */
+   private int computeSignalWidth()
+   {
+      return 0;
+   }
+   
+   private int computeSignalHeight()
+   {
+      return 0;
+   }
+   
+   /**
+    * move the signal to the lower-left of the larger 2D array
+    */
+   private void cleanImage()
+   {
+      
+   }
+   
+   /**
+    *  display only the relevant portion of the image, clipping the excess blank/white from the top and right.  
+    */
+   public void displayImageToConsole()
+   {
    }
    
    public boolean generateImageFromText()
@@ -397,21 +442,7 @@ class DataMatrix implements BarcodeIO
    
    public void displayTextToConsole()
    {
-      
+      System.out.println(text);
    }
-   
-   /**
-    *  display only the relevant portion of the image, clipping the excess blank/white from the top and right.  
-    */
-   public void displayImageToConsole()
-   {
-   }
-   
-   /**
-    * move the signal to the lower-left of the larger 2D array
-    */
-   private void cleanImage()
-   {
-      
-   }
+  
 }
