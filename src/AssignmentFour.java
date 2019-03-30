@@ -34,12 +34,14 @@ public class AssignmentFour
 
          };
       BarcodeImage bc = new BarcodeImage(sImageIn);
-      DataMatrix dm = new DataMatrix(bc);
-
-      //Test display to console.
-      //Check to make sure the image is positioned at the bottom left corner.
-      System.out.println("Test display to console.----------------------------");
+      System.out.println("Test BarcodeImage display to console.----------------------------");
       bc.displayToConsole();
+      System.out.println("End BarcodeImage display to console.----------------------------");
+      
+      DataMatrix dm = new DataMatrix(bc);
+      System.out.println("Test DataMatrix display to console.----------------------------");
+      dm.displayImageToConsole();
+      System.out.println("END DataMatrix display to console.----------------------------");
 
       //Test clone.
       BarcodeImage clonedBarcodeImage = null;
@@ -220,8 +222,9 @@ class BarcodeImage implements Cloneable
     */
    public void displayToConsole()
    {
+      StringBuilder ret;
       for(int i = 0; i < imageData.length; i ++) {
-         StringBuilder ret = new StringBuilder();
+         ret = new StringBuilder();
          for(int j = 0; j < imageData[i].length; j++) {
             if (getPixel(i,j)) {
                ret.append("*");
@@ -382,8 +385,18 @@ class DataMatrix implements BarcodeIO
          //call cleanImage to correct the position.
          cleanImage();
          
-         // set actualWidth
-         // set actualHeight
+         // first pixel that is false determines height/width
+         // loop from bottom-top, left-right
+         for(int i = image.MAX_HEIGHT - 1; i > 0; i--) {
+            if (!image.getPixel(i, 0) && actualHeight <= 0) {
+               actualHeight = (image.MAX_HEIGHT - 1 - i);
+            }
+            for(int j = 0; j < image.MAX_WIDTH; j++) {
+               if (!image.getPixel(i, j) && actualWidth <= 0) {
+                  actualWidth = j;
+               }
+            }
+         }
       } catch (CloneNotSupportedException t) {
          ret = false;
       }
@@ -398,7 +411,7 @@ class DataMatrix implements BarcodeIO
    
    public int getActualHeight()
    {
-      return actualWidth;
+      return actualHeight;
    }
    
    /*
@@ -447,6 +460,19 @@ class DataMatrix implements BarcodeIO
     */
    public void displayImageToConsole()
    {
+      StringBuilder ret;
+
+      for(int i = image.MAX_HEIGHT - getActualHeight(); i < image.MAX_HEIGHT; i++) {
+         ret = new StringBuilder();
+         for(int j = 0; j < getActualWidth(); j++) {
+            if (image.getPixel(i,j)) {
+               ret.append("*");
+            } else {
+               ret.append(" ");
+            }
+         }
+         System.out.println(ret.toString());
+      }
    }
    
    public boolean generateImageFromText()
