@@ -34,7 +34,8 @@ public class AssignmentFour
 
          };
       BarcodeImage bc = new BarcodeImage(sImageIn);
-      
+      DataMatrix dm = new DataMatrix(bc);
+
       //Test display to console.
       //Check to make sure the image is positioned at the bottom left corner.
       System.out.println("Test display to console.----------------------------");
@@ -420,9 +421,27 @@ class DataMatrix implements BarcodeIO
     */
    private void cleanImage()
    {
-      
+      int horizontalOffset = -1;
+      int verticalOffset = -1;
+
+      // loop bottom to top
+      for(int i = image.MAX_HEIGHT - 1; i > 0; i--) {
+         // loop left to right
+         for(int j = 0; j < image.MAX_WIDTH; j++) {
+            if (image.getPixel(i, j)) {
+               // offsets should only be set once
+               if (horizontalOffset < 0) {
+                  horizontalOffset = j;
+                  verticalOffset = image.MAX_HEIGHT - i - 1;
+               }
+
+               image.setPixel(i, j, false);
+               image.setPixel(i + verticalOffset, j - horizontalOffset, true);
+            }
+         }
+      }
    }
-   
+
    /**
     *  display only the relevant portion of the image, clipping the excess blank/white from the top and right.  
     */
