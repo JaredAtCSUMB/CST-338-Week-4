@@ -10,6 +10,31 @@ public class AssignmentFour
    public static void main(String[] args)
    {
       testBarcodeImage();
+      testDataMatrix();
+
+   }
+
+   private static void testDataMatrix() {
+      System.out.println("Test testDataMatrix----------------------------");
+
+      //this example is already cleanup.  scan should clean it.
+      String[] sImageIn =
+         {
+            "* * * * * * * * * * * * * * * * * * * * * ",
+            "*                                       * ",
+            "****** **** ****** ******* ** *** *****   ",
+            "*     *    ****************************** ",
+            "* **    * *        **  *    * * *   *     ",
+            "*   *    *  *****    *   * *   *  **  *** ",
+            "*  **     * *** **   **  *    **  ***  *  ",
+            "***  * **   **  *   ****    *  *  ** * ** ",
+            "*****  ***  *  * *   ** ** **  *   * *    ",
+            "***************************************** ",
+         };
+      BarcodeImage bc = new BarcodeImage(sImageIn);
+      DataMatrix dm = new DataMatrix(bc);
+      dm.translateImageToText();
+      dm.displayTextToConsole();
    }
 
    public static void testBarcodeImage() {
@@ -229,7 +254,7 @@ class BarcodeImage implements Cloneable
             if (getPixel(i,j)) {
                ret.append("*");
             } else {
-               ret.append(" ");
+               ret.append("s");
             }
          }
          System.out.println(ret.toString());
@@ -480,8 +505,66 @@ class DataMatrix implements BarcodeIO
       return true;
    }
    
+   private int getAscii(int row, int position, int column) {
+      //ascii values to be added are: 1,2,4,8,16,32,64,128
+
+      boolean value = this.image.getPixel(row - position, column);
+      int ret = 0;
+      if (value) {
+         if (position == 0) {
+            ret = 1;
+         } else if (position == 1) {
+            ret = 2;
+         } else if (position == 2) {
+            ret = 4;
+         } else if (position == 3) {
+            ret = 8;
+         } else if (position == 4) {
+            ret = 16;
+         } else if (position == 5) {
+            ret = 32;
+         } else if (position == 6) {
+            ret = 64;
+         }else if (position == 7) {
+            ret = 128;
+         }
+      }
+      return ret;
+   }
+   
    public boolean translateImageToText()
    {
+      if (this.image == null) {
+         return false;
+      }
+      //we are expecting cleanImage() method to remove extra whitespaces on the image and position the image to lower left corer of the grid.
+      //so the image stored internally at this point can be translated using Datamatrix rule
+      
+      //we remove the last row as it's the Closed Limitation Line
+      int startingRow = BarcodeImage.MAX_HEIGHT - 2;
+      //we remove the first column starting with 1 as it's the Closed Limitation Line
+      int startingColumn = 1;
+      
+      StringBuilder ret = new StringBuilder();
+      for(int j = startingColumn; j < BarcodeImage.MAX_WIDTH - 1; j++) {
+         int ascii = 0;
+         //ascii values to be added are: 1,2,4,8,16,32,64,128
+         //TODO: this is not really optimal
+         ascii = ascii + getAscii(startingRow, 0, j);
+         ascii = ascii + getAscii(startingRow, 1, j);
+         ascii = ascii + getAscii(startingRow, 2, j);
+         ascii = ascii + getAscii(startingRow, 3, j);
+         ascii = ascii + getAscii(startingRow, 4, j);
+         ascii = ascii + getAscii(startingRow, 5, j);
+         ascii = ascii + getAscii(startingRow, 6, j);
+         ascii = ascii + getAscii(startingRow, 7, j);
+         
+         //Convert to char and store the letter/char to an array
+         //Double check http://www.asciitable.com/
+         ret.append((char) ascii);
+      }
+      
+      this.text = ret.toString();
       return true;
    }
    
