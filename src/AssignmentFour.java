@@ -568,6 +568,53 @@ class DataMatrix implements BarcodeIO
    
    public boolean generateImageFromText()
    {
+      int numberOfChars = text.length();
+      int[] asciiValues = new int[numberOfChars];
+      String[] str = new String[numberOfChars];
+      String[] img = new String[10];
+      for(int i = 0; i < numberOfChars; i++) {
+         asciiValues[i] = (int)text.charAt(i);
+      }
+      
+      for(int i = 0; i < asciiValues.length; i++) {
+         String binary = Integer.toBinaryString(asciiValues[i]);
+         while (binary.length() < 8) {
+            binary = "0" + binary;
+         }
+         str[i] = "";
+         for (int j = 0; j < binary.length(); j++) {
+            if (binary.charAt(j) == '1') {
+               str[i] += '*';
+            } else {
+               str[i] += ' ';
+            }
+         }
+//         System.out.println(text.charAt(i));
+//         System.out.println(asciiValues[i]);
+//         System.out.println(binary);
+//         System.out.println(str[i]);
+      }
+
+      int pos = 0;
+      for (int i = 0; i < 10; i++) {
+         img[i] = "*";
+         if (i == 0) {
+            for(int j = 0; j < str.length / 2; j++) {
+               img[i] += " *";
+            }
+         } else if (i == 9) {
+            for(int j = 0; j < str.length; j++) {
+               img[i] += "*";
+            }
+         } else {
+            for(int j = 0; j < str.length; j++) {
+               img[i] += str[j].charAt(pos);
+            }
+            pos++;
+         }
+//         System.out.println(img[i]);
+      }
+      this.image = new BarcodeImage(img);
       return true;
    }
    
