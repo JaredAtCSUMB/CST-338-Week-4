@@ -54,6 +54,20 @@ public class AssignmentFour
             "                                          "
 
       };
+
+      String[] textOut =
+      {
+            "* * * * * * * * * * * * * * * * *   ",  
+            "*                                   ",   
+            "*** ******* **  * * *** ********    ",   
+            "* ************** ****************   ",     
+            "**   ***     *    *   *  * **       ",     
+            "*       *   *        *      ***     ",     
+            "***   *  **  *   *  **  ***  ***    ",     
+            "**  ** *         ** ***  * * **     ",     
+            "*** * ** *  * * ***  *  * * ** **   ",     
+            "*********************************   ",
+      };
      
       BarcodeImage bc = new BarcodeImage(sImageIn);
       DataMatrix dm = new DataMatrix(bc);
@@ -74,8 +88,16 @@ public class AssignmentFour
       
       // Create your own message
       System.out.println("\nTest 3: ");
-      dm.readText("What a great resume builder this is!");
+      dm.readText("We crushed it! A's for everyone!");
       dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // Test the output from image generated from text
+      System.out.println("\nTest 4: ");
+      bc = new BarcodeImage(textOut);
+      dm.scan(bc);
+      dm.translateImageToText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
    }
