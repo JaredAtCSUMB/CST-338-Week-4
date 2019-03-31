@@ -429,23 +429,34 @@ class DataMatrix implements BarcodeIO
       }
    }
    
-   // TODO: clean this bad boy up
+   /*
+    * Generates a new BarcodeImage based off the text sent into the readText()
+    * method. This method first converts the characters into their ascii
+    * values. It then converts those values into their binary representation.
+    * Finally, it converts the binary representation into either an asterisk
+    * or space, depending on its true/false state.
+    */
    public boolean generateImageFromText()
    {
+      // Ascii char values are between 2^0 and 2^8, we add 2 for the 'spines'
+      int maxHeight = 10;
       int numberOfChars = text.length();
-      int[] asciiValues = new int[numberOfChars];
+      int pos = 0;
+      int ascii;
+      String binary;
       String[] str = new String[numberOfChars];
-      String[] img = new String[10];
+      String[] img = new String[maxHeight];
+
+      // Converts each char into ascii value, then binary, then string
       for(int i = 0; i < numberOfChars; i++) {
-         asciiValues[i] = (int)text.charAt(i);
-      }
-      
-      for(int i = 0; i < asciiValues.length; i++) {
-         String binary = Integer.toBinaryString(asciiValues[i]);
+         str[i] = "";
+         ascii = (int)text.charAt(i);
+         binary = Integer.toBinaryString(ascii);
+         // Ensure we have 8 bits
          while (binary.length() < 8) {
             binary = "0" + binary;
          }
-         str[i] = "";
+         // Convert binary values to strings: true = "*" or false = " "
          for (int j = 0; j < binary.length(); j++) {
             if (binary.charAt(j) == '1') {
                str[i] += '*';
@@ -455,29 +466,34 @@ class DataMatrix implements BarcodeIO
          }
       }
 
-      int pos = 0;
-      for (int i = 0; i < 10; i++) {
+      // Populates the img array with the converted text values
+      for (int i = 0; i < img.length; i++) {
          img[i] = "*";
+         // First row consists of asterisks and spaces
          if (i == 0) {
             for(int j = 0; j < str.length / 2; j++) {
                img[i] += " *";
             }
+         // Last row consists of solid asterisks
          } else if (i == 9) {
             for(int j = 0; j < str.length; j++) {
                img[i] += "*";
             }
+         // Populate the body with the correct value ("*" or " ")
          } else {
             for(int j = 0; j < str.length; j++) {
                img[i] += str[j].charAt(pos);
             }
+            // pos only counts from 0-8; powers of 2
             pos++;
          }
       }
+
       this.image = new BarcodeImage(img);
       return true;
    }
    
-   // TODO: llok for clean up
+   // TODO: clean up
    private int getAscii(int row, int position, int column) {
       //ascii values to be added are: 1,2,4,8,16,32,64,128
 
@@ -505,7 +521,7 @@ class DataMatrix implements BarcodeIO
       return ret;
    }
    
-   // TODO: look for clean up
+   // TODO: clean up
    public boolean translateImageToText()
    {
       if (this.image == null) {
