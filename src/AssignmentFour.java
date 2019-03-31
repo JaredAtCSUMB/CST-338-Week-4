@@ -1,5 +1,5 @@
 /**
- * This application simulates a barcode scanner...
+ * This application simulates a barcode scanner...TODO
  * 
  * @author Team 6: Jared Cheney, Andrew Meraz, Chul Kim and Agustin Garcia
  *
@@ -276,7 +276,7 @@ class BarcodeImage implements Cloneable
 }
 
 /*
- * DataMatrix class...
+ * DataMatrix class...TODO
  */
 class DataMatrix implements BarcodeIO
 {
@@ -493,7 +493,7 @@ class DataMatrix implements BarcodeIO
       return true;
    }
    
-   // TODO: clean up
+   // TODO: clean up?
    private int getAscii(int row, int position, int column) {
       //ascii values to be added are: 1,2,4,8,16,32,64,128
 
@@ -521,7 +521,7 @@ class DataMatrix implements BarcodeIO
       return ret;
    }
    
-   // TODO: clean up
+   // TODO: clean up?
    public boolean translateImageToText()
    {
       if (this.image == null) {
