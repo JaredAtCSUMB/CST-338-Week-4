@@ -9,9 +9,75 @@ public class AssignmentFour
 
    public static void main(String[] args)
    {
-      testBarcodeImage();
-      testDataMatrix();
+//      testBarcodeImage();
+//      testDataMatrix();
+    
+      // Below are the actual tests needed for the assignment
+      String[] sImageIn =
+      {
+         "                                               ",
+         "                                               ",
+         "                                               ",
+         "     * * * * * * * * * * * * * * * * * * * * * ",
+         "     *                                       * ",
+         "     ****** **** ****** ******* ** *** *****   ",
+         "     *     *    ****************************** ",
+         "     * **    * *        **  *    * * *   *     ",
+         "     *   *    *  *****    *   * *   *  **  *** ",
+         "     *  **     * *** **   **  *    **  ***  *  ",
+         "     ***  * **   **  *   ****    *  *  ** * ** ",
+         "     *****  ***  *  * *   ** ** **  *   * *    ",
+         "     ***************************************** ",  
+         "                                               ",
+         "                                               ",
+         "                                               "
 
+      };      
+
+      String[] sImageIn_2 =
+      {
+            "                                          ",
+            "                                          ",
+            "* * * * * * * * * * * * * * * * * * *     ",
+            "*                                    *    ",
+            "**** *** **   ***** ****   *********      ",
+            "* ************ ************ **********    ",
+            "** *      *    *  * * *         * *       ",
+            "***   *  *           * **    *      **    ",
+            "* ** * *  *   * * * **  *   ***   ***     ",
+            "* *           **    *****  *   **   **    ",
+            "****  *  * *  * **  ** *   ** *  * *      ",
+            "**************************************    ",
+            "                                          ",
+            "                                          ",
+            "                                          ",
+            "                                          "
+
+      };
+     
+      BarcodeImage bc = new BarcodeImage(sImageIn);
+      DataMatrix dm = new DataMatrix(bc);
+     
+      // First secret message
+      System.out.println("Test 1: ");
+      dm.translateImageToText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // Second secret message
+      System.out.println("\nTest 2: ");
+      bc = new BarcodeImage(sImageIn_2);
+      dm.scan(bc);
+      dm.translateImageToText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // Create your own message
+      System.out.println("\nTest 3: ");
+      dm.readText("What a great resume builder this is!");
+      dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
    }
 
    private static void testDataMatrix() {
