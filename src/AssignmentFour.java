@@ -431,26 +431,35 @@ class DataMatrix implements BarcodeIO
    
    /*
     * Generates a new BarcodeImage based off the text sent into the readText()
-    * method. This method first converts the characters into their ascii
+    * method. Calls the getConvertedChars() and getFormattedImage() helper
+    * methods to do the text-to-image conversions.
+    */
+   public boolean generateImageFromText()
+   {
+      String[] convertedChars = getConvertedChars();
+      String[] formattedImage = getFormattedImage(convertedChars);
+      this.image = new BarcodeImage(formattedImage);
+      return true;
+   }
+   
+   /*
+    * This method first converts the characters of text var into their ascii
     * values. It then converts those values into their binary representation.
     * Finally, it converts the binary representation into either an asterisk
     * or space, depending on its true/false state.
     */
-   public boolean generateImageFromText()
+   private String[] getConvertedChars()
    {
-      // Ascii char values are between 2^0 and 2^8, we add 2 for the 'spines'
-      int maxHeight = 10;
-      int numberOfChars = text.length();
-      int pos = 0;
       int ascii;
       String binary;
+      int numberOfChars = text.length();
       String[] str = new String[numberOfChars];
-      String[] img = new String[maxHeight];
 
-      // Converts each char into ascii value, then binary, then string
       for(int i = 0; i < numberOfChars; i++) {
          str[i] = "";
+         // Convert char to ascii
          ascii = (int)text.charAt(i);
+         // Convert ascii to binary
          binary = Integer.toBinaryString(ascii);
          // Ensure we have 8 bits
          while (binary.length() < 8) {
@@ -465,6 +474,21 @@ class DataMatrix implements BarcodeIO
             }
          }
       }
+
+      return str;
+   }
+   
+   /*
+    * This method takes the formatted character array, and converts it into
+    * an image that will be used to create a new BarcodeImage. It adds the 
+    * 'spines' to the image as well
+    */
+   private String[] getFormattedImage(String[] str)
+   {
+      // Ascii char values are between 2^0 and 2^8, we add 2 for the 'spines'
+      int maxHeight = 10;
+      int pos = 0;
+      String[] img = new String[maxHeight];
 
       // Populates the img array with the converted text values
       for (int i = 0; i < img.length; i++) {
@@ -489,8 +513,7 @@ class DataMatrix implements BarcodeIO
          }
       }
 
-      this.image = new BarcodeImage(img);
-      return true;
+      return img;
    }
    
    // TODO: clean up?
