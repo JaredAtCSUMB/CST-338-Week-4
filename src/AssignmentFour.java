@@ -329,19 +329,8 @@ class DataMatrix implements BarcodeIO
       try {
          this.image = bc.clone();
          cleanImage();
-         
-         // first pixel that is false determines height/width
-         // loop from bottom-top, left-right
-         for(int i = image.MAX_HEIGHT - 1; i > 0; i--) {
-            if (!image.getPixel(i, 0) && actualHeight <= 0) {
-               actualHeight = (image.MAX_HEIGHT - 1 - i);
-            }
-            for(int j = 0; j < image.MAX_WIDTH; j++) {
-               if (!image.getPixel(i, j) && actualWidth <= 0) {
-                  actualWidth = j;
-               }
-            }
-         }
+         actualHeight = computeSignalHeight();
+         actualWidth = computeSignalWidth();
       } catch (CloneNotSupportedException t) {
          ret = false;
       }
@@ -364,21 +353,39 @@ class DataMatrix implements BarcodeIO
       System.out.println(text);
    }
    
-   /*
-    * Assuming that the image is correctly situated in the lower-left corner of
-    * the larger boolean array, these methods use the "spine" of the array
-    * (left and bottom BLACK) to determine the actual size.
+   /* Method that computes width of image through looping and sending
+    * attributes through getPixel returns width. Assumes image is positioned
+    * lower left
     */
-   // TODO: complete this method
    private int computeSignalWidth()
    {
-      return 0;
+      int counterWidth = 0;
+      
+      for(int i = 0; i < BarcodeImage.MAX_WIDTH; i++) {
+         if(image.getPixel(BarcodeImage.MAX_HEIGHT - 1, i)) {
+            counterWidth++;
+         }
+      }
+      
+      return counterWidth;
    }
    
-   // TODO: complete this method
+   /*
+    * Method that computes height of image through looping and sending
+    * attributes through getPixel returns height. Assumes image is positioned
+    * lower left
+    */
    private int computeSignalHeight()
    {
-      return 0;
+      int counterHeight = 0;
+      
+      for(int k = BarcodeImage.MAX_HEIGHT - 1; k >= 0; k--) {
+         if(image.getPixel(k, 0)) {
+            counterHeight++;
+         }
+      }
+      
+      return counterHeight;
    }
    
    /**
