@@ -38,7 +38,7 @@ public class AssignmentFour
       {
             "                                          ",
             "                                          ",
-            "* * * * * * * * * * * * * * * * * * *     ",
+            "* * * * * * * * * * * * * * * * * * * *     ",
             "*                                    *    ",
             "**** *** **   ***** ****   *********      ",
             "* ************ ************ **********    ",
@@ -56,17 +56,19 @@ public class AssignmentFour
 
       String[] textOut =
       {
-            "* * * * * * * * * * * * * * * * *   ",  
-            "*                                   ",   
-            "*** ******* **  * * *** ********    ",   
-            "* ************** ****************   ",     
-            "**   ***     *    *   *  * **       ",     
-            "*       *   *        *      ***     ",     
-            "***   *  **  *   *  **  ***  ***    ",     
-            "**  ** *         ** ***  * * **     ",     
-            "*** * ** *  * * ***  *  * * ** **   ",     
-            "*********************************   ",
+            "* * * * * * * * * * * * * * * * * ",    
+            "*                                *",    
+            "*** ******* **  * * *** ********  ",   
+            "* ************** *****************",   
+            "**   ***     *    *   *  * **     ",    
+            "*       *   *        *      ***  *",    
+            "***   *  **  *   *  **  ***  ***  ",    
+            "**  ** *         ** ***  * * **  *",    
+            "*** * ** *  * * ***  *  * * ** ** ",    
+            "**********************************"
       };
+      
+      System.out.println((char)170);
      
       BarcodeImage bc = new BarcodeImage(sImageIn);
       DataMatrix dm = new DataMatrix(bc);
@@ -508,18 +510,33 @@ class DataMatrix implements BarcodeIO
          img[i] = "*";
          // First row consists of asterisks and spaces
          if (i == 0) {
-            for(int j = 0; j < str.length / 2; j++) {
-               img[i] += " *";
+            for(int j = 0; j <= str.length; j++) {
+               //if column is odd then *, else even then space
+               if(j%2 == 1) {
+                  img[i] += "*";
+               }else{
+                  img[i] += " ";
+               }
             }
-         // Last row consists of solid asterisks
+         // Last row consists of solid *
          } else if (i == 9) {
-            for(int j = 0; j < str.length; j++) {
+            for(int j = 0; j <= str.length; j++) {
                img[i] += "*";
             }
          // Populate the body with the correct value ("*" or " ")
          } else {
-            for(int j = 0; j < str.length; j++) {
-               img[i] += str[j].charAt(pos);
+            for(int j = 0; j <= str.length; j++) {
+               if(j == str.length)
+               {
+                  //if row is odd then *, else space
+                  if(i%2 == 1){
+                     img[i] += "*";
+                  }else {
+                     img[i] += " ";
+                  }
+               }else{
+                  img[i] += str[j].charAt(pos);
+               }
             }
             // pos only counts from 0-8; powers of 2
             pos++;
@@ -574,8 +591,9 @@ class DataMatrix implements BarcodeIO
    }  
 }
 /********************************* Output ************************************
+ª
 Test 1: 
-CSUMB CSIT online program is top notch.ª
+CSUMB CSIT online program is top notch.
 * * * * * * * * * * * * * * * * * * * * *
 *                                       *
 ****** **** ****** ******* ** *** *****  
@@ -588,7 +606,7 @@ CSUMB CSIT online program is top notch.ª
 *****************************************
 
 Test 2: 
-You did it!  Great work.  Celebrate.ª
+You did it!  Great work.  Celebrate.
 * * * * * * * * * * * * * * * * * * * 
 *                                    *
 **** *** **   ***** ****   *********  
@@ -603,26 +621,26 @@ You did it!  Great work.  Celebrate.ª
 Test 3: 
 We crushed it! A's for everyone!
 * * * * * * * * * * * * * * * * *     
-*                                     
+*                                *    
 *** ******* **  * * *** ********      
-* ************** ****************     
+* ************** *****************    
 **   ***     *    *   *  * **         
-*       *   *        *      ***       
+*       *   *        *      ***  *    
 ***   *  **  *   *  **  ***  ***      
-**  ** *         ** ***  * * **       
+**  ** *         ** ***  * * **  *    
 *** * ** *  * * ***  *  * * ** **     
-*********************************     
+**********************************    
 
 Test 4: 
 We crushed it! A's for everyone!
-* * * * * * * * * * * * * * * * *
-*                                
-*** ******* **  * * *** ******** 
-* ************** ****************
-**   ***     *    *   *  * **    
-*       *   *        *      ***  
-***   *  **  *   *  **  ***  *** 
-**  ** *         ** ***  * * **  
-*** * ** *  * * ***  *  * * ** **
-*********************************
+* * * * * * * * * * * * * * * * * 
+*                                *
+*** ******* **  * * *** ********  
+* ************** *****************
+**   ***     *    *   *  * **     
+*       *   *        *      ***  *
+***   *  **  *   *  **  ***  ***  
+**  ** *         ** ***  * * **  *
+*** * ** *  * * ***  *  * * ** ** 
+**********************************
 *****************************************************************************/
