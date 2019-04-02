@@ -1,5 +1,9 @@
 /**
- * This application simulates a barcode scanner...TODO
+ * This application models how a scanner would scan a DataMatrix code to
+ * actual text by decoding the DataMatrix pixels. In this assignment, the
+ * pixels are documented with * for a black pixel, and ' '(space) for a white
+ * pixel. We will be using BarcodeIO interface, BarcodeImage class, and 
+ * DataMatrix class.
  * 
  * @author Team 6: Jared Cheney, Andrew Meraz, Chul Kim and Agustin Garcia
  *
@@ -100,7 +104,7 @@ public class AssignmentFour
 
 /*
  * BarcodeIO interface defines the methods we will need to manipulate
- * BarcodeImage objects
+ * BarcodeImage objects. 
  */
 interface BarcodeIO
 {
@@ -276,7 +280,9 @@ class BarcodeImage implements Cloneable
 }
 
 /*
- * DataMatrix class...TODO
+ * DataMatrix class works on converting the data matrix image to a readable
+ * text, or converting readable text to a data matrix image. This class 
+ * implements BarcodeIO interface and works with a BarcodeImage object.
  */
 class DataMatrix implements BarcodeIO
 {
@@ -397,14 +403,14 @@ class DataMatrix implements BarcodeIO
       int verticalOffset = -1;
 
       // loop bottom to top
-      for(int i = image.MAX_HEIGHT - 1; i > 0; i--) {
+      for(int i = BarcodeImage.MAX_HEIGHT - 1; i > 0; i--) {
          // loop left to right
-         for(int j = 0; j < image.MAX_WIDTH; j++) {
+         for(int j = 0; j < BarcodeImage.MAX_WIDTH; j++) {
             if (image.getPixel(i, j)) {
                // offsets should only be set once
                if (horizontalOffset < 0) {
                   horizontalOffset = j;
-                  verticalOffset = image.MAX_HEIGHT - i - 1;
+                  verticalOffset = BarcodeImage.MAX_HEIGHT - i - 1;
                }
 
                image.setPixel(i, j, false);
@@ -422,8 +428,8 @@ class DataMatrix implements BarcodeIO
    {
       StringBuilder ret;
 
-      for(int i = image.MAX_HEIGHT - getActualHeight();
-            i < image.MAX_HEIGHT; i++) {
+      for(int i = BarcodeImage.MAX_HEIGHT - getActualHeight();
+            i < BarcodeImage.MAX_HEIGHT; i++) {
          ret = new StringBuilder();
          for(int j = 0; j < getActualWidth(); j++) {
             if (image.getPixel(i,j)) {
@@ -523,44 +529,30 @@ class DataMatrix implements BarcodeIO
       return img;
    }
    
-   // TODO: clean up?
+   //Helps get the value of the row position in a column and returns the int 
    private int getAscii(int row, int position, int column) {
       //ascii values to be added are: 1,2,4,8,16,32,64,128
 
       boolean value = this.image.getPixel(row - position, column);
       int ret = 0;
+      int num[] = {1, 2, 4, 8, 16, 32, 64, 128};
       if (value) {
-         if (position == 0) {
-            ret = 1;
-         } else if (position == 1) {
-            ret = 2;
-         } else if (position == 2) {
-            ret = 4;
-         } else if (position == 3) {
-            ret = 8;
-         } else if (position == 4) {
-            ret = 16;
-         } else if (position == 5) {
-            ret = 32;
-         } else if (position == 6) {
-            ret = 64;
-         }else if (position == 7) {
-            ret = 128;
-         }
+         ret = num[position];
       }
       return ret;
    }
-   
-   // TODO: clean up?
+  
    public boolean translateImageToText()
    {
       if (this.image == null) {
          return false;
       }
-      //we are expecting cleanImage() method to remove extra whitespaces on the image and position the image to lower left corer of the grid.
-      //so the image stored internally at this point can be translated using Datamatrix rule
-      
-      //we remove the last row as it's the Closed Limitation Line
+      /*we are expecting cleanImage() method to remove extra whitespaces on the 
+       * image and position the image to lower left corer of the grid.
+       * so the image stored internally at this point can be translated using 
+       * Datamatrix rule
+       * we remove the last row as it's the Closed Limitation Line
+       **/
       int startingRow = BarcodeImage.MAX_HEIGHT - 2;
       //we remove the first column starting with 1 as it's the Closed Limitation Line
       int startingColumn = 1;
@@ -569,16 +561,9 @@ class DataMatrix implements BarcodeIO
       for(int j = startingColumn; j < BarcodeImage.MAX_WIDTH - 1; j++) {
          int ascii = 0;
          //ascii values to be added are: 1,2,4,8,16,32,64,128
-         //TODO: this is not really optimal
-         ascii = ascii + getAscii(startingRow, 0, j);
-         ascii = ascii + getAscii(startingRow, 1, j);
-         ascii = ascii + getAscii(startingRow, 2, j);
-         ascii = ascii + getAscii(startingRow, 3, j);
-         ascii = ascii + getAscii(startingRow, 4, j);
-         ascii = ascii + getAscii(startingRow, 5, j);
-         ascii = ascii + getAscii(startingRow, 6, j);
-         ascii = ascii + getAscii(startingRow, 7, j);
-         
+         for (int i = 0; i < 8; i++){
+            ascii = ascii + getAscii(startingRow, i, j);
+         }
          //Convert to char and store the letter/char to an array
          //Double check http://www.asciitable.com/
          ret.append((char) ascii);
@@ -588,3 +573,56 @@ class DataMatrix implements BarcodeIO
       return true;
    }  
 }
+/********************************* Output ************************************
+Test 1: 
+CSUMB CSIT online program is top notch.ª
+* * * * * * * * * * * * * * * * * * * * *
+*                                       *
+****** **** ****** ******* ** *** *****  
+*     *    ******************************
+* **    * *        **  *    * * *   *    
+*   *    *  *****    *   * *   *  **  ***
+*  **     * *** **   **  *    **  ***  * 
+***  * **   **  *   ****    *  *  ** * **
+*****  ***  *  * *   ** ** **  *   * *   
+*****************************************
+
+Test 2: 
+You did it!  Great work.  Celebrate.ª
+* * * * * * * * * * * * * * * * * * * 
+*                                    *
+**** *** **   ***** ****   *********  
+* ************ ************ **********
+** *      *    *  * * *         * *   
+***   *  *           * **    *      **
+* ** * *  *   * * * **  *   ***   *** 
+* *           **    *****  *   **   **
+****  *  * *  * **  ** *   ** *  * *  
+**************************************
+
+Test 3: 
+We crushed it! A's for everyone!
+* * * * * * * * * * * * * * * * *     
+*                                     
+*** ******* **  * * *** ********      
+* ************** ****************     
+**   ***     *    *   *  * **         
+*       *   *        *      ***       
+***   *  **  *   *  **  ***  ***      
+**  ** *         ** ***  * * **       
+*** * ** *  * * ***  *  * * ** **     
+*********************************     
+
+Test 4: 
+We crushed it! A's for everyone!
+* * * * * * * * * * * * * * * * *
+*                                
+*** ******* **  * * *** ******** 
+* ************** ****************
+**   ***     *    *   *  * **    
+*       *   *        *      ***  
+***   *  **  *   *  **  ***  *** 
+**  ** *         ** ***  * * **  
+*** * ** *  * * ***  *  * * ** **
+*********************************
+*****************************************************************************/
