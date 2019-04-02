@@ -558,7 +558,7 @@ class DataMatrix implements BarcodeIO
       int startingColumn = 1;
       
       StringBuilder ret = new StringBuilder();
-      for(int j = startingColumn; j < BarcodeImage.MAX_WIDTH - 1; j++) {
+      for(int j = startingColumn; j < actualWidth - 1; j++) {
          int ascii = 0;
          //ascii values to be added are: 1,2,4,8,16,32,64,128
          for (int i = 0; i < 8; i++){
