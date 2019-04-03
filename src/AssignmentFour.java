@@ -68,8 +68,6 @@ public class AssignmentFour
             "**********************************"
       };
       
-      System.out.println((char)170);
-     
       BarcodeImage bc = new BarcodeImage(sImageIn);
       DataMatrix dm = new DataMatrix(bc);
      
@@ -591,7 +589,6 @@ class DataMatrix implements BarcodeIO
    }  
 }
 /********************************* Output ************************************
-ª
 Test 1: 
 CSUMB CSIT online program is top notch.
 * * * * * * * * * * * * * * * * * * * * *
