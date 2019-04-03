@@ -38,7 +38,7 @@ public class AssignmentFour
       {
             "                                          ",
             "                                          ",
-            "* * * * * * * * * * * * * * * * * * * *     ",
+            "* * * * * * * * * * * * * * * * * * * *   ",
             "*                                    *    ",
             "**** *** **   ***** ****   *********      ",
             "* ************ ************ **********    ",
@@ -190,7 +190,7 @@ class BarcodeImage implements Cloneable
             charData = data.charAt(j);
             fillData = false;
             // check if this is space
-            if (charData != ' ') {
+            if (charData != DataMatrix.WHITE_CHAR) {
                fillData = true;
             }
             
@@ -433,9 +433,9 @@ class DataMatrix implements BarcodeIO
          ret = new StringBuilder();
          for(int j = 0; j < getActualWidth(); j++) {
             if (image.getPixel(i,j)) {
-               ret.append("*");
+               ret.append(BLACK_CHAR);
             } else {
-               ret.append(" ");
+               ret.append(WHITE_CHAR);
             }
          }
          System.out.println(ret.toString());
@@ -481,9 +481,9 @@ class DataMatrix implements BarcodeIO
          // Convert binary values to strings: true = "*" or false = " "
          for (int j = 0; j < binary.length(); j++) {
             if (binary.charAt(j) == '1') {
-               str[i] += '*';
+               str[i] += BLACK_CHAR;
             } else {
-               str[i] += ' ';
+               str[i] += WHITE_CHAR;
             }
          }
       }
@@ -505,21 +505,21 @@ class DataMatrix implements BarcodeIO
 
       // Populates the img array with the converted text values
       for (int i = 0; i < img.length; i++) {
-         img[i] = "*";
+         img[i] = BLACK_CHAR + "";
          // First row consists of asterisks and spaces
          if (i == 0) {
             for(int j = 0; j <= str.length; j++) {
                //if column is odd then *, else even then space
                if(j%2 == 1) {
-                  img[i] += "*";
+                  img[i] += BLACK_CHAR;
                }else{
-                  img[i] += " ";
+                  img[i] += WHITE_CHAR;
                }
             }
          // Last row consists of solid *
          } else if (i == 9) {
             for(int j = 0; j <= str.length; j++) {
-               img[i] += "*";
+               img[i] += BLACK_CHAR;
             }
          // Populate the body with the correct value ("*" or " ")
          } else {
@@ -528,9 +528,9 @@ class DataMatrix implements BarcodeIO
                {
                   //if row is odd then *, else space
                   if(i%2 == 1){
-                     img[i] += "*";
+                     img[i] += BLACK_CHAR;
                   }else {
-                     img[i] += " ";
+                     img[i] += WHITE_CHAR;
                   }
                }else{
                   img[i] += str[j].charAt(pos);
@@ -544,7 +544,9 @@ class DataMatrix implements BarcodeIO
       return img;
    }
    
-   //Helps get the value of the row position in a column and returns the int 
+   /*
+    * Helps get the value of the row position in a column and returns the int 
+    */
    private int getAscii(int row, int position, int column) {
       //ascii values to be added are: 1,2,4,8,16,32,64,128
 
@@ -557,19 +559,19 @@ class DataMatrix implements BarcodeIO
       return ret;
    }
   
+   /* We are expecting cleanImage() method to remove extra whitespaces on the 
+    * image and position the image to lower left corer of the grid.
+    * The image stored internally at this point can be translated using 
+    * Datamatrix rule.
+    **/
    public boolean translateImageToText()
    {
       if (this.image == null) {
          return false;
       }
-      /*we are expecting cleanImage() method to remove extra whitespaces on the 
-       * image and position the image to lower left corer of the grid.
-       * so the image stored internally at this point can be translated using 
-       * Datamatrix rule
-       * we remove the last row as it's the Closed Limitation Line
-       **/
+
       int startingRow = BarcodeImage.MAX_HEIGHT - 2;
-      //we remove the first column starting with 1 as it's the Closed Limitation Line
+      // remove the first column starting with 1; the Closed Limitation Line
       int startingColumn = 1;
       
       StringBuilder ret = new StringBuilder();
